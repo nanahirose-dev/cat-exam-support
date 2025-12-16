@@ -3,8 +3,31 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <title>ねこ応援ページ｜中学受験</title>
+  <meta name="description" content="中学受験を控える子どもを、動く猫が毎日励ます応援ページ。チェックリスト・カウントダウン・1行メモつき。">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://nanahirose-dev.github.io/cat-exam-support/" />
+
+  <!-- OGP（ブログ埋め込み・SNSのサムネイル用） -->
+  <meta property="og:title" content="ねこ応援ページ｜中学受験をがんばるあなたへ">
+  <meta property="og:description" content="動く猫が毎日励ます、中学受験応援ページ。1問でも前進、それで十分。">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:url" content="https://nanahirose-dev.github.io/cat-exam-support/">
+  <meta property="og:image" content="https://nanahirose-dev.github.io/cat-exam-support/ogp.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- X (Twitter) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ねこ応援ページ｜中学受験をがんばるあなたへ">
+  <meta name="twitter:description" content="動く猫がそっと励ます、中学受験応援ページ。">
+  <meta name="twitter:image" content="https://nanahirose-dev.github.io/cat-exam-support/ogp.png">
+
   <meta name="theme-color" content="#fff0f7" />
+
   <style>
     :root{
       --bg1:#fff0f7;
@@ -14,7 +37,6 @@
       --muted:#6b6b6b;
       --accent:#ff7fb3;
       --accent2:#7dd3ff;
-      --ok:#d8f7d7;
       --shadow: 0 10px 30px rgba(0,0,0,.08);
       --radius: 18px;
     }
@@ -116,7 +138,7 @@
       color:white;font-weight:900;
       padding:10px 14px;border-radius:14px;
       box-shadow:0 10px 22px rgba(255,127,179,.25);
-      transition:transform .12s ease, filter .2s ease;
+      transition:transform .12s ease;
     }
     .btn:active{transform:translateY(1px) scale(.99)}
     .btn2{background:linear-gradient(135deg,var(--accent2),#b7ecff);box-shadow:0 10px 22px rgba(125,211,255,.25);}
@@ -135,7 +157,6 @@
       box-shadow:0 0 0 4px rgba(255,127,179,.18);
     }
     .footer{text-align:center;color:rgba(58,58,58,.7);font-size:.9rem;margin-top:14px;}
-
     .spark{
       position:fixed;
       pointer-events:none;
@@ -214,9 +235,6 @@
   </div>
 
 <script>
-/* =========================
-   ユーティリティ
-========================= */
 function escapeHtml(str){
   return String(str)
     .replaceAll("&","&amp;")
@@ -242,9 +260,6 @@ function burstSparkAtCenter(el){
   burstSpark(r.left + r.width/2, r.top + r.height/2);
 }
 
-/* =========================
-   データ
-========================= */
 const MSGS = [
   "今日は“1問でも”で勝ち。ねこ判定：合格◎",
   "不安があるのは、ちゃんと向き合ってる証拠。",
@@ -267,14 +282,11 @@ const CHECKS_DEFAULT = [
 ];
 
 const K = {
-  memo: "cat_exam_memo_v3",
-  exam: "cat_exam_date_v3",
-  checks: "cat_exam_checks_v3"
+  memo: "cat_exam_memo_v5",
+  exam: "cat_exam_date_v5",
+  checks: "cat_exam_checks_v5"
 };
 
-/* =========================
-   今日の一言
-========================= */
 const messageBox = document.getElementById("messageBox");
 const heroMessage = document.getElementById("heroMessage");
 function pickMsg(){
@@ -288,9 +300,6 @@ document.getElementById("nextMsg").addEventListener("click", () => {
   burstSparkAtCenter(messageBox);
 });
 
-/* =========================
-   チェックリスト
-========================= */
 const checklistEl = document.getElementById("checklist");
 function loadChecks(){
   try{
@@ -330,9 +339,6 @@ function renderChecks(){
 }
 renderChecks();
 
-/* =========================
-   カウントダウン
-========================= */
 const countdownEl = document.getElementById("countdown");
 const countdownSub = document.getElementById("countdownSub");
 const daysLabel = document.getElementById("daysLabel");
@@ -343,7 +349,7 @@ function getExamDate(){
     const d = new Date(raw);
     if(!isNaN(d)) return d;
   }
-  return new Date("2026-02-01T00:00:00"); // 初期値（必要なら変更）
+  return new Date("2026-02-01T00:00:00");
 }
 function setExamDate(d){
   localStorage.setItem(K.exam, d.toISOString());
@@ -385,9 +391,6 @@ document.getElementById("setDate").addEventListener("click", ()=>{
   burstSparkAtCenter(document.getElementById("setDate"));
 });
 
-/* =========================
-   メモ
-========================= */
 const memo = document.getElementById("memo");
 memo.value = localStorage.getItem(K.memo) || "";
 document.getElementById("saveMemo").addEventListener("click", ()=>{
@@ -402,9 +405,6 @@ document.getElementById("clearMemo").addEventListener("click", ()=>{
   burstSparkAtCenter(document.getElementById("clearMemo"));
 });
 
-/* =========================
-   ヒーロー：Canvas猫（確実に表示＆クリック反応）
-========================= */
 const hero = document.getElementById("hero");
 const canvas = document.getElementById("c");
 const moodLabel = document.getElementById("moodLabel");
@@ -421,9 +421,8 @@ function resizeCanvasSafely(){
   ctx.setTransform(dpr,0,0,dpr,0,0);
   return true;
 }
-window.addEventListener("resize", ()=>{ resizeCanvasSafely(); }, {passive:true});
+window.addEventListener("resize", ()=>{ resizeCanvasSafely(); }, {passive:true });
 
-/* ---- 猫オブジェクト（先に生成しておく：setMoodが安全に呼べる） ---- */
 const cat = (() => {
   let t = 0;
   let mode = "wiggle";
@@ -439,7 +438,6 @@ const cat = (() => {
     speech.until = performance.now() + 1400;
     boost(1.0);
   }
-
   function roundRect(x,y,w,h,r){
     ctx.beginPath();
     ctx.moveTo(x+r,y);
@@ -449,7 +447,6 @@ const cat = (() => {
     ctx.arcTo(x,y,x+w,y,r);
     ctx.closePath();
   }
-
   function drawBG(w,h){
     for(let i=0;i<10;i++){
       const x = (w*0.1) + (i* w*0.09) + Math.sin(t*0.4+i)*18;
@@ -460,18 +457,9 @@ const cat = (() => {
       ctx.arc(x,y,rr,0,Math.PI*2);
       ctx.fill();
     }
-    for(let i=0;i<18;i++){
-      const x = (i*37 + (t*40)) % (w+40) - 20;
-      const y = (h*0.15) + (i*29 % (h*0.6)) + Math.sin(t+i)*10;
-      const a = 0.06 + 0.05*Math.sin(t*1.3+i);
-      ctx.fillStyle = `rgba(255,255,255,${a})`;
-      ctx.fillRect(x,y,2,2);
-    }
   }
-
   function drawCat(w,h){
     const cx = w*0.52, cy = h*0.62;
-
     let dx=0, dy=0, rot=0, squash=1, stretch=1;
     const e = energy;
 
@@ -502,7 +490,6 @@ const cat = (() => {
       dx = Math.sin(t*1.5)*6;
     }
 
-    // 影
     ctx.save();
     ctx.translate(cx+dx, cy+44);
     ctx.scale(1.1, 0.7);
@@ -521,42 +508,32 @@ const cat = (() => {
     const fur2 = "#ffd7a8";
     const line = "rgba(58,58,58,.85)";
 
-    // からだ
     ctx.fillStyle = fur2;
     roundRect(-85, -10, 170, 110, 40); ctx.fill();
     ctx.fillStyle = fur;
     roundRect(-80, -18, 160, 105, 38); ctx.fill();
 
-    // あたま
     ctx.fillStyle = fur;
     roundRect(-65, -110, 130, 108, 46); ctx.fill();
 
-    // 耳
     ctx.strokeStyle = line; ctx.lineWidth = 3; ctx.lineJoin="round";
     ctx.fillStyle = fur2;
     ctx.beginPath(); ctx.moveTo(-48,-108); ctx.lineTo(-78,-140); ctx.lineTo(-60,-92); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.beginPath(); ctx.moveTo( 48,-108); ctx.lineTo( 78,-140); ctx.lineTo( 60,-92); ctx.closePath(); ctx.fill(); ctx.stroke();
 
-    // 目
     ctx.fillStyle = "rgba(58,58,58,.88)";
     ctx.beginPath(); ctx.ellipse(-24,-78,10,13,0,0,Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.ellipse( 24,-78,10,13,0,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle = "rgba(255,255,255,.85)";
-    ctx.beginPath(); ctx.ellipse(-27,-82,2.2,3.2,0,0,Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.ellipse( 21,-82,2.2,3.2,0,0,Math.PI*2); ctx.fill();
 
-    // 口
     ctx.strokeStyle = line; ctx.lineWidth = 3; ctx.lineCap="round";
     ctx.beginPath(); ctx.moveTo(0,-70); ctx.lineTo(0,-66); ctx.stroke();
     ctx.beginPath(); ctx.arc(-8,-64,10,0.1,1.2); ctx.stroke();
     ctx.beginPath(); ctx.arc( 8,-64,10,1.95,3.04); ctx.stroke();
 
-    // ほっぺ
     ctx.fillStyle = "rgba(255,127,179,.22)";
     ctx.beginPath(); ctx.ellipse(-22,-62,12,9,0,0,Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.ellipse( 22,-62,12,9,0,0,Math.PI*2); ctx.fill();
 
-    // しっぽ
     ctx.save();
     ctx.translate(76, 18);
     ctx.rotate(0.4 + Math.sin(t*3)*0.25);
@@ -564,25 +541,8 @@ const cat = (() => {
     roundRect(-9, -38, 18, 76, 10); ctx.fill();
     ctx.restore();
 
-    // やる気キラ
-    const star = 0.45 + Math.max(0,Math.sin(t*2))*0.35 + e*0.08;
-    ctx.save();
-    ctx.translate(0,-132);
-    ctx.rotate(Math.sin(t*2)*0.15);
-    ctx.scale(star, star);
-    const g = ctx.createRadialGradient(0,0,1,0,0,18);
-    g.addColorStop(0, "rgba(255,255,255,.95)");
-    g.addColorStop(1, "rgba(255,127,179,0)");
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.moveTo(0,-18); ctx.lineTo(5,-5); ctx.lineTo(18,0); ctx.lineTo(5,5);
-    ctx.lineTo(0,18); ctx.lineTo(-5,5); ctx.lineTo(-18,0); ctx.lineTo(-5,-5);
-    ctx.closePath(); ctx.fill();
     ctx.restore();
 
-    ctx.restore();
-
-    // ふきだし
     const now = performance.now();
     if(now < speech.until){
       ctx.save();
@@ -601,7 +561,6 @@ const cat = (() => {
       ctx.restore();
     }
   }
-
   function frame(){
     if(!running) return;
     const r = hero.getBoundingClientRect();
@@ -616,17 +575,14 @@ const cat = (() => {
     t += 0.016 + energy*0.01;
     requestAnimationFrame(frame);
   }
-
   function start(){
     if(running) return;
     running = true;
     frame();
   }
-
   return { setMode, boost, cheer, start };
 })();
 
-/* ---- モード（cat が作られた後に setMood を呼ぶのでエラーになりません） ---- */
 const moods = [
   {name:"ぷるぷる", id:"wiggle"},
   {name:"ぴょん", id:"hop"},
@@ -641,7 +597,6 @@ function setMood(i){
 }
 setMood(0);
 
-/* クリックで励まし＆モード変更 */
 hero.addEventListener("pointerdown", (e)=>{
   const msg = pickMsg();
   heroMessage.innerHTML = `🐾 「${escapeHtml(msg)}」<br><span style="color:rgba(58,58,58,.75); font-size:.92rem;">猫の動きが変わりました。</span>`;
@@ -650,7 +605,6 @@ hero.addEventListener("pointerdown", (e)=>{
   burstSpark(e.clientX, e.clientY);
 }, {passive:true});
 
-/* load後に、サイズが取れるまで待ってから開始 */
 window.addEventListener("load", () => {
   const tryStart = () => {
     const ok = resizeCanvasSafely();
@@ -660,7 +614,6 @@ window.addEventListener("load", () => {
   tryStart();
 });
 
-/* メモ入力で静かに加速 */
 let memoTimer = null;
 memo.addEventListener("input", ()=>{
   if(memoTimer) clearTimeout(memoTimer);
